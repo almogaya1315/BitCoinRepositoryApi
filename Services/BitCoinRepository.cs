@@ -34,7 +34,7 @@ namespace BitCoinRepositoryApi.Services
                 parameters.Add("Email", userModel.Email, System.Data.DbType.String, System.Data.ParameterDirection.Input);
                 parameters.Add("Password", userModel.Password, System.Data.DbType.String, System.Data.ParameterDirection.Input);
                 var lookUp = new Dictionary<int, User>();
-                con.Query<User, Order, User>("GetUser", 
+                con.Query<User, Order, User>("GetUser",
                     (user, order) =>
                     {
                         User innerUser = null;
@@ -45,7 +45,7 @@ namespace BitCoinRepositoryApi.Services
                         return innerUser;
                     }, parameters, commandType: CommandType.StoredProcedure);
                 if (userModel.Id > 0)
-                userModel = lookUp.FirstOrDefault().Value;
+                    userModel = lookUp.FirstOrDefault().Value;
                 return userModel;
             }
         }
