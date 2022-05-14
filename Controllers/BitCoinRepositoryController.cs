@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BitCoinManagerModels;
+using BitCoinRepositoryApi.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,29 +13,55 @@ namespace BitCoinRepositoryApi.Controllers
     [Route("[controller]")]
     public class BitCoinRepositoryController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<BitCoinRepositoryController> _logger;
+        private readonly BitCoinRepository _repository;
 
-        public BitCoinRepositoryController(ILogger<BitCoinRepositoryController> logger)
+        public BitCoinRepositoryController(ILogger<BitCoinRepositoryController> logger, BitCoinRepository repository)
         {
             _logger = logger;
+            _repository = repository;
         }
 
-        [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpPost("getuser")]
+        public ActionResult<User> GetUser([FromBody]User user)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            try
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                return _repository.GetUser(user);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Error in 'GetUser'. {e.Message}");
+                return BadRequest(e);
+            }
+        }
+
+        [HttpPost("createuser")]
+        public ActionResult<int> CreateUser([FromBody] User user)
+        {
+            try
+            {
+                return _repository.InsertUser(user);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Error in 'CreateUser'. {e.Message}");
+                return BadRequest(e);
+            }
+        }
+
+        [HttpPost("createorder")]
+        public ActionResult<int> CreateOrder([FromRoute]int userId, [FromBody]Order order)
+        {
+            try
+            {
+                return _repository.InsertOrder(userId, order);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Error in 'CreateOrder'. {e.Message}");
+                return BadRequest(e);
+            }
         }
     }
 }
