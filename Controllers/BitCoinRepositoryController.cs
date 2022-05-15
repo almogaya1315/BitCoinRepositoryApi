@@ -6,11 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace BitCoinRepositoryApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Microsoft.AspNetCore.Mvc.Route("[controller]")]
     public class BitCoinRepositoryController : ControllerBase
     {
         private readonly ILogger<BitCoinRepositoryController> _logger;
@@ -22,8 +23,8 @@ namespace BitCoinRepositoryApi.Controllers
             _repository = repository;
         }
 
-        [HttpPost("getuser")]
-        public ActionResult<User> GetUser([FromBody]User user)
+        [Microsoft.AspNetCore.Mvc.HttpPost("getuser")]
+        public ActionResult<User> GetUser([Microsoft.AspNetCore.Mvc.FromBody]User user)
         {
             try
             {
@@ -36,8 +37,8 @@ namespace BitCoinRepositoryApi.Controllers
             }
         }
 
-        [HttpPost("createuser")]
-        public ActionResult<int> CreateUser([FromBody] User user)
+        [Microsoft.AspNetCore.Mvc.HttpPost("createuser")]
+        public ActionResult<int> CreateUser([Microsoft.AspNetCore.Mvc.FromBody] User user)
         {
             try
             {
@@ -50,8 +51,8 @@ namespace BitCoinRepositoryApi.Controllers
             }
         }
 
-        [HttpPost("createorder")]
-        public ActionResult<int> CreateOrder([FromRoute]int userId, [FromBody]Order order)
+        [Microsoft.AspNetCore.Mvc.HttpPost("createorder")]
+        public ActionResult<int> CreateOrder([FromUri]int userId, [Microsoft.AspNetCore.Mvc.FromBody] Order order)
         {
             try
             {

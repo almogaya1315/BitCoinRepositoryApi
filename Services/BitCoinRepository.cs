@@ -40,7 +40,7 @@ namespace BitCoinRepositoryApi.Services
                         User innerUser = null;
                         if (!lookUp.TryGetValue(user.Id, out innerUser)) lookUp.Add(user.Id, innerUser = user);
                         userModel.Id = user.Id;
-                        if (!innerUser.Orders.Exists(o => o.Id == order.Id))
+                        if (order != null && !innerUser.Orders.Exists(o => o.Id == order.Id))
                             innerUser.Orders.Add(order);
                         return innerUser;
                     }, parameters, commandType: CommandType.StoredProcedure);
